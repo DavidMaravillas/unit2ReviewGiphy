@@ -4,23 +4,48 @@ let content = document.querySelector(`.content`)
 let select = document.querySelector("select")
 let input = document.querySelector(`#userInput`)
 let submit = document.querySelector(`#submit`)
-let limit = 10;
+let limit =1;
 let searchValue = `cats`
 
 let h1 =document.createElement("h1")
 
 
+form.addEventListener(`submit`, (event)=>{
+    event.preventDefault()
+    
+    giphySearch(searchValue,limit)
+})
+
+input.addEventListener("change", ()=>{
+    searchValue = input.value
+    console.log(searchValue)
+})
+
+select.addEventListener("change",()=>{
+    limit = Number(select.value)
+    debugger
+})
+
+const addImage = (arr) =>{
+    arr.forEach( el =>{
+        let img = document.createElement("img")
+            img.src = el.images.fixed_height_downsampled.url
+            content.appendChild(img)
+    })
+}
+
 const giphySearch = async (userInput,userLimit) =>{
+    content.innerHTML=""
     try{
         let res = await axios.get(`https://api.giphy.com/v1/gifs/search?api_key=${key}&q=${userInput}&limit=${userLimit}`)
-        console.log(res)
+        images = res.data.data
+        addImage(images)
     } catch(err){
         console.log(err)
     }
 
 }
 
-giphySearch(searchValue,limit)
 
 const popluateSelect = ()=>{
     
